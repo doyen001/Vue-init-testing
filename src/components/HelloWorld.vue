@@ -12,11 +12,17 @@ export default defineComponent ({
   data(){
     return {
       count: 5,
+      hideCompleted: false,
       todos: [
         { id: id++, text: 'Learn HTML', done: false },
         { id: id++, text: 'Learn HTML', done: true },
         { id: id++, text: 'Learn HTML', done: false }
       ]
+    }
+  },
+  computed: {
+    filteredTodos() {
+      return this.hideCompleted ? this.todos.filter((t) => !t.done) : this.todos;
     }
   },
   methods: {
@@ -26,7 +32,10 @@ export default defineComponent ({
     },
     removeTodo(toda) {
       this.todos = this.todos.filter((t) => t !== toda);
-    }
+    },
+    // hideCompleted() {
+
+    // }
   }
 });
 </script>
@@ -44,11 +53,14 @@ export default defineComponent ({
     <input v-model="newTodo" type="text">
     <button @click="addFruit()">new fruit</button> 
     <ul>
-      <li v-for="toda in todos" :key="toda.id">
+      <li v-for="toda in filteredTodos" :key="toda.id">
         <input type="checkbox" v-model="toda.done">
-        {{ toda.text }}
+        <span :class="{ done : toda.done }">{{ toda.text }}</span>
         <button @click="removeTodo(toda)">X</button>
       </li>
+      <button @click="hideCompleted = !hideCompleted">
+        {{ hideCompleted ? 'Show all' : 'Hide completed' }}
+      </button>
     </ul>
   </div>
 </template>
@@ -57,4 +69,8 @@ export default defineComponent ({
 .read-the-docs {
   color: #888;
 }
+.done {
+  text-decoration: line-through;
+}
+
 </style>
